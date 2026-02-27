@@ -3,145 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EngDoc | Engineering Documentation</title>
+    <title>Penqwin</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
-    <style>
-        body, html {
-            margin: 0; padding: 0;
-            background-color: #050505;
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
-            width: 100%;
-        }
-
-        .scroll-track { 
-            height: 250vh; 
-            position: relative;
-            width: 100%;
-        }
-
-        .viewport {
-            width: 100%;
-            height: 100vh;
-            overflow: hidden;
-            position: relative;
-            perspective: 1200px;
-        }
-
-        .zoom-container {
-            position: absolute;
-            width: 110%; height: 110%;
-            top: -5%; left: -5%;
-            transform-origin: bottom center; 
-            will-change: transform;
-        }
-
-        .layer {
-            position: absolute;
-            inset: 0;
-            background-size: cover;
-            background-position: center;
-        }
-
-        .bg-focus { background-image: url('./assets/car_on_focus.png'); z-index: 1; }
-        .fg-focus { background-image: url('./assets/toy_on_focus.png'); z-index: 2; }
-        
-        .mask { 
-            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(11, 14, 20, 0.4) 0%, rgba(5, 5, 5, 0.95) 85%); 
-            z-index: 3; 
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-        }
-
-        .ui-overlay {
-            position: absolute;
-            top: 40vh;
-            width: 100%;
-            text-align: center;
-            z-index: 10;
-            user-select: none;
-        }
-
-        #title { 
-            font-size: clamp(48px, 8vw, 102px); 
-            margin: 0; 
-            font-weight: 800;
-            color: #F8FAFC;
-            /* Initial CSS state for the animation */
-            letter-spacing: 0.4em;
-            opacity: 0.5;
-            transform: translateY(30px);
-            will-change: transform, opacity, letter-spacing;
-        }
-        
-        .text-reveal-mask {
-            overflow: hidden;
-            margin-top: 5px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #subText {
-            font-size: clamp(18px, 2.5vw, 32px); 
-            margin: 0; 
-            letter-spacing: 0.2em;
-            font-weight: 300;
-            display: flex;
-            gap: 12px;
-            color: #94A3B8;
-        }
-
-        .word { display: inline-block; transform: translateY(110%); opacity: 0; }
-
-        .cursor {
-            display: inline-block;
-            width: 2px; height: 01.5em;
-            background-color: #8B5CF6;
-            margin-left: 5px;
-            opacity: 0;
-            transform: translateY(110%);
-        }
-
-        .blinking { animation: blink 1s step-end infinite; }
-        @keyframes blink { from, to { background-color: transparent; } 50% { background-color: #8B5CF6; } }
-
-        /* Status Badge Styling */
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(139, 92, 246, 0.1);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            padding: 6px 14px;
-            border-radius: 100px;
-            color: #A78BFA;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            margin-bottom: 20px;
-            opacity: 0;
-            transform: translateY(-20px);
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div class="scroll-track">
-        <div class="viewport" id="mainViewport">
+        <div class="viewport">
             <div class="zoom-container" id="zoomContainer">
-                <div class="layer bg-focus"></div>
-                <div class="layer fg-focus" id="fgLayer"></div>
+                <div class="layer"></div>
                 <div class="layer mask" id="interactiveMask"></div>
             </div>
             
             <div class="ui-overlay" id="uiOverlay">
                 <div class="status-badge" id="badge">Launching soon</div>
-                <h1 id="title">EngDoc</h1>
+                <h1 id="title">Penqwin</h1>
                 <div class="text-reveal-mask">
                     <p id="subText">for serious products</p>
                     <span class="cursor" id="typingCursor"></span>
@@ -157,42 +37,44 @@
         const zoomContainer = document.getElementById('zoomContainer');
         const uiOverlay = document.getElementById('uiOverlay');
 
-        // Mouse Parallax
+        // FIXED MOUSE LISTENER
         window.addEventListener('mousemove', (e) => {
-            const xPct = e.clientX / window.innerWidth;
-            const yPct = e.clientY / window.innerHeight;
+            // Get dimensions of the container, not the window
+            const rect = zoomContainer.getBoundingClientRect();
+            
+            // Calculate mouse position relative to the Zoom Container
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+            // Set variables
+            mask.style.setProperty('--mouse-x', x + '%');
+            mask.style.setProperty('--mouse-y', y + '%');
+
+            // Apply slight parallax to container
+            const xPct = (e.clientX / window.innerWidth - 0.5) * 2;
+            const yPct = (e.clientY / window.innerHeight - 0.5) * 2;
             gsap.to(zoomContainer, {
-                x: (xPct - 0.5) * 25, y: (yPct - 0.5) * 25,
-                rotationY: (xPct - 0.5) * 4, rotationX: -(yPct - 0.5) * 4,
-                duration: 1.2, ease: "power2.out"
+                rotationY: xPct * 3, rotationX: -yPct * 3,
+                duration: 1, ease: "power2.out"
             });
-            gsap.to(uiOverlay, {
-                x: -(xPct - 0.5) * 15, y: -(yPct - 0.5) * 15,
-                duration: 1.5, ease: "power2.out"
-            });
-            mask.style.setProperty('--mouse-x', (xPct * 100) + '%');
-            mask.style.setProperty('--mouse-y', (yPct * 100) + '%');
         });
 
-        // Split Text
+        // Split text
         const subText = document.getElementById('subText');
-        const words = subText.innerText.split(" ");
-        subText.innerHTML = words.map(word => `<span class="word">${word}</span>`).join("");
+        subText.innerHTML = subText.innerText.split(" ").map(w => `<span class="word">${w}</span>`).join("");
 
-        // THE TIMELINE
+        // Cinematic Timeline
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: ".scroll-track",
                 start: "top top",
                 end: "bottom bottom",
                 scrub: 1.2,
-                pin: "#mainViewport",
+                pin: true,
                 pinSpacing: false
             }
         });
 
-        // 1. Heading Animation (NOW VISIBLE)
-        // Animates from the CSS starting point to these final values
         tl.to("#title", {
             opacity: 1,
             y: 0,
@@ -201,20 +83,15 @@
             ease: "power2.out"
         }, 0);
 
-        // 2. Camera & Focus
-        tl.to("#zoomContainer", { scale: 1, ease: "power1.inOut" }, 0);
-        tl.to("#fgLayer", { opacity: 0, duration: 0.5, ease: "sine.inOut" }, 0.2);
-
-        // 3. Elements Reveal
-        tl.to("#badge", { opacity: 1, y: 0, duration: 0.4, ease: "back.out(1.7)" }, 0.3);
-        tl.to(".word", { y: "0%", opacity: 1, stagger: 0.1, duration: 0.6, ease: "back.out(1.5)" }, 0.4);
+        tl.fromTo("#zoomContainer", { scale: 2.5 }, { scale: 1, ease: "power1.inOut" }, 0);
+        tl.to("#badge", { opacity: 1, y: 0, duration: 0.4 }, 0.2);
+        tl.to(".word", { y: "0%", opacity: 1, stagger: 0.1, duration: 0.6, ease: "back.out(1.5)" }, 0.3);
         
         tl.to("#typingCursor", {
             y: "0%", opacity: 1, duration: 0.6,
             onComplete: () => document.getElementById('typingCursor').classList.add('blinking'),
             onReverseComplete: () => document.getElementById('typingCursor').classList.remove('blinking')
-        }, 0.7);
-
+        }, 0.5);
     </script>
 </body>
 </html>
