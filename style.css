@@ -1,98 +1,144 @@
-body, html {
-            margin: 0; padding: 0;
-            background-color: #050505;
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
-            width: 100%;
-        }
+body,
+html {
+  margin: 0;
+  padding: 0;
+  background-color: #050505;
+  font-family: "Inter", sans-serif;
+  overflow-x: hidden;
+  width: 100%;
+}
 
-        .scroll-track { height: 250vh; position: relative; width: 100%; }
+.scroll-track {
+  height: 250vh;
+  position: relative;
+  width: 100%;
+}
 
-        .viewport {
-            width: 100%; height: 100vh;
-            overflow: hidden;
-            position: sticky; top: 0;
-            perspective: 1200px;
-        }
+.viewport {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  position: sticky;
+  top: 0;
+  perspective: 1200px;
+}
 
-        .zoom-container {
-            position: absolute;
-            width: 110%; height: 110%;
-            top: -5%; left: -5%;
-            transform-origin: bottom center; 
-            will-change: transform;
-        }
+.zoom-container {
+  position: absolute;
+  width: 110%;
+  height: 110%;
+  top: -5%;
+  left: -5%;
+  transform-origin: bottom center;
+  will-change: transform;
+}
 
-        .layer {
-            position: absolute;
-            inset: 0;
-            background-size: cover;
-            background-position: center;
-            background-image: url('./assets/violet_car.png');
-        }
+.layer {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-image: url("./assets/violet_car.png");
+}
 
-        /* FIXED MASK CSS */
-        .mask { 
-            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(11, 14, 20, 0.6) 0%, rgba(5, 5, 5, 0.95) 85%); 
-            z-index: 3; 
-            pointer-events: none;
-            position: absolute;
-            inset: 0;
-            /* Critical: ensure the background doesn't shift */
-            background-repeat: no-repeat;
-        }
+@supports (background-image: url("./assets/violet_car.webp")) {
+  .layer {
+    background-image: url("./assets/violet_car.webp");
+  }
+}
 
-        .ui-overlay {
-            position: absolute;
-            top: 40vh; width: 100%;
-            user-select: none;
-            text-align: center;
-            z-index: 10;
-        }
+.mask {
+  background: radial-gradient(
+    circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(11, 14, 20, 0.6) 0%,
+    rgba(5, 5, 5, 0.95) 85%
+  );
+  z-index: 3;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+}
 
-         #title { 
-            font-size: clamp(48px, 8vw, 102px); 
-            margin: 0; 
-            font-weight: 800;
-            color: #F8FAFC;
-            /* Initial CSS state for the animation */
-            letter-spacing: 0.4em;
-            opacity: 0.5;
-            transform: translateY(30px);
-            will-change: transform, opacity, letter-spacing;
-        }
-        
-        .text-reveal-mask {
-            overflow: hidden; margin-top: 5px;
-            display: flex; justify-content: center; align-items: center;
-        }
+.ui-overlay {
+  position: absolute;
+  top: 40vh;
+  width: 100%;
+  user-select: none;
+  text-align: center;
+  z-index: 10;
+}
 
-        #subText {
-            font-size: clamp(18px, 2.5vw, 32px); margin: 0; 
-            letter-spacing: 0.2em; font-weight: 400;
-            display: flex; gap: 12px; color: #94A3B8;
-        }
+#title {
+  font-size: clamp(48px, 8vw, 102px);
+  margin: 0;
+  font-weight: 800;
+  color: #f8fafc;
+  letter-spacing: 0.4em;
+  opacity: 0.5;
+  transform: translateY(30px);
+  will-change: transform, opacity, letter-spacing;
+}
 
-        .word { display: inline-block; transform: translateY(110%); opacity: 0; }
+.text-reveal-mask {
+  overflow: hidden;
+  margin-top: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-        .cursor {
-            display: inline-block;
-            width: 3px; height: 1.5em;
-            background-color: #8B5CF6;
-            margin-left: 5px;
-            opacity: 0;
-            transform: translateY(110%);
-        }
-        .blinking { animation: blink 1s step-end infinite; }
-        @keyframes blink { from, to { background-color: transparent; } 50% { background-color: #8B5CF6; } }
+#subText {
+  font-size: clamp(18px, 2.5vw, 32px);
+  margin: 0;
+  letter-spacing: 0.2em;
+  font-weight: 400;
+  display: flex;
+  gap: 12px;
+  color: #94a3b8;
+}
 
-        .status-badge {
-            display: inline-flex;
-            align-items: center; gap: 8px;
-            background: rgba(139, 92, 246, 0.1);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            padding: 6px 14px; border-radius: 100px;
-            color: #A78BFA; font-size: 11px;
-            text-transform: uppercase; letter-spacing: 0.2em;
-            margin-bottom: 20px; opacity: 0; transform: translateY(-20px);
-        }
+.word {
+  display: inline-block;
+  transform: translateY(110%);
+  opacity: 0;
+}
+
+.cursor {
+  display: inline-block;
+  width: 3px;
+  height: 1.5em;
+  background-color: #8b5cf6;
+  margin-left: 5px;
+  opacity: 0;
+  transform: translateY(110%);
+}
+.blinking {
+  animation: blink 1s step-end infinite;
+}
+@keyframes blink {
+  from,
+  to {
+    background-color: transparent;
+  }
+  50% {
+    background-color: #8b5cf6;
+  }
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  padding: 6px 14px;
+  border-radius: 100px;
+  color: #a78bfa;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin-bottom: 20px;
+  opacity: 0;
+  transform: translateY(-20px);
+}
